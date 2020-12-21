@@ -1,17 +1,13 @@
 <?php
 
 
-require_once('Core/BaseController.php');
-
-use Core\BaseController as BaseController;
+spl_autoload_register(function ($class) {
+    require_once('../Core/' . $class . '.php');
+});
 
 require_once('Models/Login.php');
 
 use Models\Login as LoginModel;
-
-require_once('Core/DB/DB.php');
-
-use Core\DB\DB as DB;
 
 class Login extends BaseController
 {

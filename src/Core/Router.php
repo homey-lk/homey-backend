@@ -35,16 +35,16 @@ class Router
 
     function __construct()
     {
-        $this->setRequest();
+        $this->setRequest($_SERVER['REQUEST_METHOD']);
         $this->setContoller($_SERVER['QUERY_STRING']);
         $this->setParameters($_SERVER['QUERY_STRING']);
         // $this->setHeaderParameters(getallheaders());
-        $this->setHeaderParameters(json_decode(file_get_contents("php://input"), TRUE)); //Use for handle axios requests
+        $this->setHeaderParameters(json_decode(file_get_contents("php://input"), true)); //Use for handle axios requests
     }
 
-    private function setRequest()
+    private function setRequest($request)
     {
-        $this->Request = strtolower($_SERVER['REQUEST_METHOD']);
+        $this->Request = strtolower($request);
     }
 
     public function getRequest()
