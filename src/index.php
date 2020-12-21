@@ -1,29 +1,46 @@
 <?php
 
-require_once('./Core/Router.php');
+class index
+{
 
-$router = new Core\Router();
+    private static  $router;
 
-$controllerFile = './Controllers/' . $router->getController() . ".php";
+    public function __construct()
+    {
+        spl_autoload_register(function ($class) {
+            require_once('./Core/' . $class . '.php');
+        });
 
-if(file_exists($controllerFile)) {
-   
-    require_once($controllerFile);
-    $controllerPath = "Controllers\\" . $router->getController();
-    $controller = new $controllerPath($router->getParameters(),$router->getHeaderParameters());
-    if(method_exists($controller,$router->getRequest())) {
-        $method = $router->getRequest();
-        $controller->{$method}();
-    } else {
-        http_response_code(406);
-        die('{
-            "message": "Invalid request."
-        }');
+        self::$router = new Router();
+
+        self::callController();
     }
 
-} else {
-    http_response_code(500);
-    die('{
-        "message": "Internal Server Error."
-    }');
+    public static function callController()
+    {
+        $controllerFile = './Controllers/' . self::$router->getController() . ".php";
+
+        if (file_exists($controllerFile)) {
+            require_once($controllerFile);
+
+            $controllerPath =  self::$router->getController();
+            $controller = new $controllerPath(self::$router->getParameters(), self::$router->getHeaderParameters());
+            if (method_exists($controller, self::$router->getRequest())) {
+                $method = self::$router->getRequest();
+                $controller->{$method}();
+            } else {
+                http_response_code(406);
+                die('{
+                    "message": "Invalid request."
+                }');
+            }
+        } else {
+            http_response_code(500);
+            die('{
+                "message": "Internal Server Error."
+            }');
+        }
+    }
 }
+
+new index();

@@ -1,8 +1,5 @@
 <?php
 
-namespace Controllers;
-
-use Exception;
 
 require_once('Core/BaseController.php');
 
